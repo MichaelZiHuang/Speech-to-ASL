@@ -7,7 +7,7 @@ def hello(recognizer, microphone):
         recognizer.adjust_for_ambient_noise(source)
         audio = recognizer.listen(source)
     try:
-        response = recognizer.recognize_google(audio)
+        response = recognizer.recognize_sphinx(audio)
     except sr.RequestError:
         response = "Fail"
     except sr.UnknownValueError:
@@ -17,5 +17,8 @@ def hello(recognizer, microphone):
 if __name__ == "__main__":
     recognizer = sr.Recognizer()
     microphone = sr.Microphone(device_index=0)
+    #names = microphone.list_microphone_names()
+    #print(names)
+    #print("Hello! This is a basic speech understander)
     guess = hello(recognizer, microphone)
     print("Said:", guess)

@@ -37,14 +37,16 @@ I've coded out the above ideas, let's start with the word lemmatizer.
                 "V": wordnet.VERB,
                 "R": wordnet.ADV}
    # print(tag_dict.get(tag, wordnet.NOUN))
-    return tag_dict.get(tag, wordnet.NOUN)</code>
+    return tag_dict.get(tag, wordnet.NOUN) </code>
+    
 I got this off a website, so credit to them. Note the print statements are there for clarity. The lemmantizer requires a list, so we pass that in. It takes a word and marks it with all
 possible notations in an array format. So, word[0][1][0] would give us the first tag related to that word. For example, walking would be ('walking', VBG), V is the verb, so we match that with
 the set and grab the notation and return it. This changes the word.
 
 
 Now, let's begin with the video stuff.
-<code> def videos(word):
+<code>
+    def videos(word):
     browser = webdriver.Chrome()
     site = "https://www.signasl.org/sign/" + str(word)
     browser.get(site)

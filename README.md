@@ -52,7 +52,31 @@ Now, let's begin with the video stuff.
     browser.get(site)
     vid = browser.find_element_by_class_name("vjs-tech").get_attribute("src")
     browser.quit()
-
-    return vid
     download_file(vid, word) 
     </pre></code>
+It takes in a word, just 1 word, we are assuming that we don't have this word in our video database. It then opens up
+a chrome instance, it will open an asl website of my choice, appending the word to get to the right search. From here,
+we have the right page. From here, we need to look in the html directly and grab the src directly. We exit the webdriver
+and pass it into the downloader to grab it. notice how it finds the element. I had to go to the HTML directly to find it. 
+
+<pre><code>
+def download_file(url, word):
+    local_filename =  "C:/Users/Michael Huang/Documents/GitHub/TexttoASL/Signs/" + word + ".mp4"
+    # NOTE the stream=True parameter
+    r = requests.get(url, stream=True)
+    with open(local_filename, 'wb') as f:
+        #print(local_filename)
+        for chunk in r.iter_content(chunk_size=1024): 
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                #f.flush() commented by recommendation from J.F.Sebastian
+    return local_filename
+</pre></code>
+Notice here, this code is designed to grab the memory directly and download it. It downloads it in multiple chunks and places it using
+absolute OS pathing. Its fairly straight forward, it requries getting the URL.
+
+That's it for day 2! It's looking good, its basically complete!
+
+To do:
+Add Speech Recognition
+Add a DB to avoid redundant video downloading

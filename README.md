@@ -28,7 +28,7 @@ the videos and get things matched on words. With this, we have full text to ASL 
 
 <h1> Day 2: </h1>
 I've coded out the above ideas, let's start with the word lemmatizer.
-<code> def get_wordnet_pos(word):
+<pre><code> def get_wordnet_pos(word):
     """Map POS tag to first character lemmatize() accepts"""
     tag = nltk.pos_tag([word])[0][1][0].upper()
   #  print(nltk.pos_tag([word])[0])
@@ -37,7 +37,7 @@ I've coded out the above ideas, let's start with the word lemmatizer.
                 "V": wordnet.VERB,
                 "R": wordnet.ADV}
    # print(tag_dict.get(tag, wordnet.NOUN))
-    return tag_dict.get(tag, wordnet.NOUN) </code>
+    return tag_dict.get(tag, wordnet.NOUN) </pre></code>
     
 I got this off a website, so credit to them. Note the print statements are there for clarity. The lemmantizer requires a list, so we pass that in. It takes a word and marks it with all
 possible notations in an array format. So, word[0][1][0] would give us the first tag related to that word. For example, walking would be ('walking', VBG), V is the verb, so we match that with

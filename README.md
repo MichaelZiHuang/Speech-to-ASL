@@ -45,7 +45,7 @@ the set and grab the notation and return it. This changes the word.
 
 
 Now, let's begin with the video stuff.
-<code>
+<pre><code>
     def videos(word):
     browser = webdriver.Chrome()
     site = "https://www.signasl.org/sign/" + str(word)
@@ -53,6 +53,6 @@ Now, let's begin with the video stuff.
     vid = browser.find_element_by_class_name("vjs-tech").get_attribute("src")
     browser.quit()
 
-    #return vid
+    return vid
     download_file(vid, word) 
-    </code>
+    </pre></code>

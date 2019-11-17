@@ -77,6 +77,69 @@ absolute OS pathing. Its fairly straight forward, it requries getting the URL.
 
 That's it for day 2! It's looking good, its basically complete!
 
-To do:
-Add Speech Recognition
-Add a DB to avoid redundant video downloading
+<h1>Day 3:</h1>
+Significant recode in a few areas. To start with the new features:
+<pre><code>
+def process_words(phrase):
+    #ASL does not use any articles in its speech.
+    bad = {"am", "is", "are", "was", "were", "a", "an", "are"}
+    tokenizer = RegexpTokenizer(r'\w+')
+    word = tokenizer.tokenize(phrase)
+    lemma = WordNetLemmatizer()
+    
+    for w in word:
+        if w not in bad:
+            yield lemma.lemmatize(w, get_wordnet_pos(w))
+        else if w == "my" or w == "i":
+            yield "me"
+</pre></code>
+This section is dedicated to taking the user's input (be it text or speech to text) and transform it into their
+non-conjugated, non-punctuated form and rewrites certain self-referencial words as well as removing articles. 
+
+As for the DB...
+<pre><code>
+def check_db(): # Checks if a video for a word has already been downloaded. 
+    vids = listdir(OS_PATH)
+    already_have = {}
+    for v in vids:
+        already_have[v[:-4]] = None
+    return already_have
+</pre></code>
+It is more of a list rather than a full DB. It pulls the list of videos we've already downloaded and puts them into a set. I decided to use a set
+for easier searching, I didn't want to iterate through the set. Essentially it grabs all the words we have, making sure to remove the ".mp4".
+
+
+<pre><code>
+def collect_vids(db, phrase):
+    vidtxt = open("vids", "w")
+    missing = []
+    for w in phrase:
+        if w in db:
+            # grab word
+            vidtxt.write(OS_PATH + w + ".mp4")
+        else:  
+            vidtxt.write(videos(w))
+            # download video
+</pre></code>
+The next step it to take these words and download anything we are missing through the webdriver. It's straight forward from there. It writes them to a .txt file, 
+I plan on using this as a list of videos we want to concatenate together.
+
+However, there was a videos function rewrite.
+<pre><code>
+def videos(word):
+    driver = webdriver.Chrome()
+    site = "https://www.signingsavvy.com/search/" + str(word)
+    driver.get(site)
+
+    try:
+        driver.find_element_by_link_text(word.upper()).click()
+    except: 
+        pass
+    vid = driver.find_element_by_class_name("vjs-tech").get_attribute("src")
+  
+    driver.quit()
+
+    return download_file(vid, word)
+</pre></code>
+I decided to switch to a new website. The last website had the issue of where it would pull undesired videotypes (youtube) as well as inconveniently intermixing
+terms. This new website will insteasd send us to a search query if a word has multiple results, we then click the first item in the list and download that video.

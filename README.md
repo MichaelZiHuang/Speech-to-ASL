@@ -143,3 +143,94 @@ def videos(word):
 </pre></code>
 I decided to switch to a new website. The last website had the issue of where it would pull undesired videotypes (youtube) as well as inconveniently intermixing
 terms. This new website will insteasd send us to a search query if a word has multiple results, we then click the first item in the list and download that video.
+
+
+Day 5:
+Completed!
+It's working, it all works! I've added some  infrastructure
+
+<pre><code>
+def runTranslate(translated):
+    wordlist = check_db()
+    collect_vids(wordlist, translated)
+
+    try:
+        os.remove('C:/Users/Michael Huang/Documents/GitHub/TexttoASL/output.mp4')
+    except:
+        pass
+    command = ['ffmpeg', '-f', 'concat', '-safe', '0',  '-i', 'C:/Users/Michael Huang/Documents/GitHub/TexttoASL/vids.txt', '-c', 'copy', 'output.mp4']
+    subprocess.call(command, shell=True)
+
+
+def runSpeech():
+    recognizer = sr.Recognizer()
+    microphone = sr.Microphone(device_index=1)
+    Words = Speech(recognizer, microphone)
+    print("You said:", Words)
+    if(Words == "1" or Words == "2"):
+        print("Voice Capture Failed")
+        return None
+    translated = tokened(Words)
+    runTranslate(translated)
+
+def runText():
+    phrase = input("Input your phrase: ")
+    translated = tokened(str(phrase))
+    runTranslate(translated)
+
+</pre></code>
+
+Here, I've split up the related functions. Now the user, from main, is able to choose what they want to use. Since I haven't gone over speech recognition, let's do that.
+
+<pre><code>
+def runSpeech():
+    recognizer = sr.Recognizer()
+    microphone = sr.Microphone(device_index=1)
+    Words = Speech(recognizer, microphone)
+    print("You said:", Words)
+    if(Words == "1" or Words == "2"):
+        print("Voice Capture Failed")
+        return None
+    translated = tokened(Words)
+    runTranslate(translated)
+</pre></code>
+
+I've chosen to use SpeechRecognition for simplicity, it offers several methods for basic speech recognition. Essentially, it grabs the microphone
+from the OS, I've chosen index=1 since I have two mics in my computer. It'll run my speech function that translates the mic. Notice that
+1 and 2 occur to stop unnecessary video installs
+
+<pre><code>
+def Speech(recognizer, microphone):
+    print("Please say your phrase")
+    with microphone as source:
+        recognizer.adjust_for_ambient_noise(source)
+        audio = recognizer.listen(source)
+    try:
+        response = recognizer.recognize_google(audio)
+    except sr.RequestError:
+        response = "1"
+    except sr.UnknownValueError:
+        response = "2"
+    print("Recording closed")
+    return response
+</pre><code>
+
+Here's the speech function. Essentially, it runs the built in Google Web API speech recognizer, it requires internet. We take that and pass it through the normal 
+text methods of taking in input.
+
+<pre><code>
+def runTranslate(translated):
+    wordlist = check_db()
+    collect_vids(wordlist, translated)
+
+    try:
+        os.remove('C:/Users/Michael Huang/Documents/GitHub/TexttoASL/output.mp4')
+    except:
+        pass
+    command = ['ffmpeg', '-f', 'concat', '-safe', '0',  '-i', 'C:/Users/Michael Huang/Documents/GitHub/TexttoASL/vids.txt', '-c', 'copy', 'output.mp4']
+    subprocess.call(command, shell=True)
+</pre><code>
+Here's the video concatnation part. Essentially, it uses ffmpeg (must be installed on your system) and fuses the videos together. Luckily, they are all
+from the same website and thus should be using the same codec.
+
+This was a really fun project! I had a good time.

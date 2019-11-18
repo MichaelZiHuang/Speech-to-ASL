@@ -16,14 +16,11 @@ OS_PATH = "C:/Users/Michael Huang/Documents/GitHub/TexttoASL/Signs/"
 
 def download_file(url, word):
     local_filename =  OS_PATH + word + ".mp4"
-    # NOTE the stream=True parameter
     r = requests.get(url, stream=True)
     with open(local_filename, 'wb') as f:
-        #print(local_filename)
         for chunk in r.iter_content(chunk_size=1024): 
-            if chunk: # filter out keep-alive new chunks
+            if chunk: 
                 f.write(chunk)
-                #f.flush() commented by recommendation from J.F.Sebastian
     return local_filename
 
 
@@ -43,7 +40,7 @@ def videos(phrase):
   
     driver.quit()
     return None
-    #return download_file(vid, word)
+  
 
 
 
@@ -59,18 +56,18 @@ def Speech(recognizer, microphone):
         response = "1"
     except sr.UnknownValueError:
         response = "2"
+    print("Recording closed")
     return response
 
 
 def get_wordnet_pos(word):
     """Map POS tag to first character lemmatize() accepts"""
     tag = nltk.pos_tag([word])[0][1][0].upper()
-  #  print(nltk.pos_tag([word])[0])
     tag_dict = {"J": wordnet.ADJ,
                 "N": wordnet.NOUN,
                 "V": wordnet.VERB,
                 "R": wordnet.ADV}
-   # print(tag_dict.get(tag, wordnet.NOUN))
+
     return tag_dict.get(tag, wordnet.NOUN)
 
 
@@ -95,13 +92,15 @@ def check_db(): # Checks if a video for a word has already been downloaded.
 def collect_vids(db, phrase):
     vidtxt = open('vids.txt', 'w')
     missing = []
-    for w in phrase:
 
+    for w in phrase:
         if w not in db:
             missing.append(w)
         vidtxt.write("file 'Signs/" + w + ".mp4'\n")
+
     if missing != []:
        videos(missing)
+
     vidtxt.close()
  
 def runTranslate(translated):
@@ -144,6 +143,6 @@ if __name__ == "__main__":
     elif(int(choice) == 2):
         runText()
     else:
-        print("You put in the wrong stuff.")
+        print("You put in the wrong stuff, 1 and 2 only please")
    
 

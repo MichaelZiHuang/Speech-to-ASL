@@ -10,7 +10,7 @@ Required Packages:
 <l1>Setuptools</l1>
 <l1>Wheel</l1>
 <l1>Requests</l1>
- <l1>ffmpeg</l1>
+<l1>ffmpeg</l1>
 </ul>
 
 <h1> Day 1: </h1>

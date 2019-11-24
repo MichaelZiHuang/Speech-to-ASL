@@ -10,6 +10,7 @@ Required Packages:
 <l1>Setuptools</l1>
 <l1>Wheel</l1>
 <l1>Requests</l1>
+ <l1>ffmpeg</l1>
 </ul>
 
 <h1> Day 1: </h1>
@@ -229,7 +230,7 @@ def runTranslate(translated):
         pass
     command = ['ffmpeg', '-f', 'concat', '-safe', '0',  '-i', 'C:/Users/Michael Huang/Documents/GitHub/TexttoASL/vids.txt', '-c', 'copy', 'output.mp4']
     subprocess.call(command, shell=True)
-</pre><code>
+</pre></code>
 Here's the video concatnation part. Essentially, it uses ffmpeg (must be installed on your system) and fuses the videos together. Luckily, they are all
 from the same website and thus should be using the same codec.
 

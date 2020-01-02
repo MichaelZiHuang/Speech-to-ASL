@@ -146,7 +146,7 @@ I decided to switch to a new website. The last website had the issue of where it
 terms. This new website will insteasd send us to a search query if a word has multiple results, we then click the first item in the list and download that video.
 
 
-Day 5:
+<h1>Day 5</h1>
 Completed!
 It's working, it all works! I've added some  infrastructure
 
@@ -214,7 +214,7 @@ def Speech(recognizer, microphone):
         response = "2"
     print("Recording closed")
     return response
-</pre><code>
+</pre></code>
 
 Here's the speech function. Essentially, it runs the built in Google Web API speech recognizer, it requires internet. We take that and pass it through the normal 
 text methods of taking in input.
